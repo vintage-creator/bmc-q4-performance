@@ -1,5 +1,13 @@
 import { motion } from "framer-motion";
-import { AlertCircle, DollarSign, TrendingUp, Target, Activity, BarChart3, Lock } from "lucide-react";
+import {
+  AlertCircle,
+  DollarSign,
+  TrendingUp,
+  Target,
+  Activity,
+  BarChart3,
+  Lock,
+} from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MetricCard } from "@/components/TradingDashboard/MetricCard";
 import { PerformanceChart } from "@/components/TradingDashboard/PerformanceChart";
@@ -14,14 +22,23 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Blue Marvel Capital Strategies</h1>
-              <p className="text-sm text-muted-foreground">Apollo I - Account 3591540</p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            {/* Title */}
+            <div className="text-center md:text-left">
+              <h1 className="text-2xl font-bold text-foreground">
+                Blue Marvel Capital Strategies
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Apollo I - Account 3591540
+              </p>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/30">
+
+            {/* Proprietary Badge */}
+            <div className="flex items-center justify-center md:justify-end gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/30">
               <Lock className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Proprietary Data</span>
+              <span className="text-sm font-medium text-primary">
+                Proprietary Data
+              </span>
             </div>
           </div>
         </div>
@@ -37,12 +54,13 @@ const Index = () => {
         >
           <Alert className="bg-warning/10 border-warning/50">
             <AlertCircle className="h-4 w-4 text-warning" />
-            <AlertDescription className="text-warning-foreground">
-              <strong>Confidential:</strong> This trading data is proprietary information of Blue Marvel Capital Strategies. 
-              Unauthorized distribution or reproduction is prohibited. For official site: 
-              <a 
-                href="https://bmc-trading-floor-user-web-kszq.vercel.app/" 
-                target="_blank" 
+            <AlertDescription className="text-warning-foreground text-white">
+              <strong>Confidential:</strong> This trading data is proprietary
+              information of Blue Marvel Capital Strategies. Unauthorized
+              distribution or reproduction is prohibited. For official site:
+              <a
+                href="https://bmc-trading-floor-user-web-kszq.vercel.app/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="underline ml-1 hover:text-warning"
               >

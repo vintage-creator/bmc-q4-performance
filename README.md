@@ -1,73 +1,70 @@
-# Welcome to your Lovable project
+# Blue Marvel Capital — Trading Dashboard
 
-## Project info
+A minimal trading analytics dashboard showcasing key performance metrics, trade history, distribution charts, and proprietary insights for **Blue Marvel Capital Strategies — Apollo I (Account 3591540).**
 
-**URL**: https://lovable.dev/projects/db20e8aa-4031-49a6-9deb-9758383bfdc4
+---
 
-## How can I edit this code?
+## Overview
 
-There are several ways of editing your application.
+This project contains a React + TypeScript application that renders:
 
-**Use Lovable**
+- Performance metric cards  
+- Win rate, profit factor, drawdown, balance statistics  
+- Performance chart  
+- Trade distribution visualizations  
+- Trade history table  
+- Insights & tips panel  
+- Animated UI using Framer Motion  
+- Tailwind + shadcn-style components
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/db20e8aa-4031-49a6-9deb-9758383bfdc4) and start prompting.
+All displayed data is **proprietary and confidential**.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **React + TypeScript**
+- **Vite**
+- **Tailwind CSS**
+- **shadcn-style components**
+- **framer-motion**
+- **lucide-react**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Installation & Setup
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+```bash
+# Clone repository
 git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
 cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
 ```
 
-**Edit a file directly in GitHub**
+# Install dependencies
+npm install
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+# Start development server
+npm run dev
 
-**Use GitHub Codespaces**
+## To build for production:
+npm run build
+npm run preview
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Project Structure
+```bash src/
+ ├─ components/
+ │   └─ TradingDashboard/
+ │        ├─ MetricCard.tsx
+ │        ├─ PerformanceChart.tsx
+ │        ├─ TradeDistribution.tsx
+ │        ├─ TradeHistory.tsx
+ │        └─ InsightsTips.tsx
+ ├─ data/
+ │    └─ tradingData.ts
+ └─ pages/Index.tsx
+ ```
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/db20e8aa-4031-49a6-9deb-9758383bfdc4) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+ # Security Notice
+ 
+- All trading data displayed or referenced is confidential and the property of Blue Marvel Capital Strategies.
+- Do NOT redistribute, publish, or expose the included data or dashboard visuals.
