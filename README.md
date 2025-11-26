@@ -32,8 +32,8 @@ All displayed data is **proprietary and confidential**.
 
 ```bash
 # Clone repository
-git clone <YOUR_GIT_URL>
-cd <YOUR_PROJECT_NAME>
+git clone https://github.com/vintage-creator/bmc-data-explorer.git
+cd bmc-data-explorer
 ```
 
 ## Install dependencies
