@@ -11,6 +11,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MetricCard } from "@/components/TradingDashboard/MetricCard";
 import { PerformanceChart } from "@/components/TradingDashboard/PerformanceChart";
+import { ROIChart } from "@/components/TradingDashboard/ROIChart";
 import { TradeDistribution } from "@/components/TradingDashboard/TradeDistribution";
 import { TradeHistory } from "@/components/TradingDashboard/TradeHistory";
 import { InsightsTips } from "@/components/TradingDashboard/InsightsTips";
@@ -113,6 +114,11 @@ const Index = () => {
         {/* Performance Chart */}
         <div className="mb-8">
           <PerformanceChart />
+        </div>
+
+        {/* ROI Chart */}
+        <div className="mb-8">
+          <ROIChart />
         </div>
 
         {/* Trade Distribution Charts */}
