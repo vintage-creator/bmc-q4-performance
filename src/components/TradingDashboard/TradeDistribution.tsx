@@ -11,6 +11,7 @@ import {
   Cell,
   PieChart,
   Pie,
+  Legend,
 } from "recharts";
 import { tradeStatistics } from "@/data/tradingData";
 
@@ -70,30 +71,59 @@ export const TradeDistribution = () => {
           Win/Loss Distribution
         </h3>
 
-        {/* Ensures the chart always has height */}
-        <div className="w-full min-h-[300px]">
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
+        {/* Ensures the chart always has height with proper padding */}
+        <div className="w-full h-[320px] md:h-[350px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
               <Pie
                 data={distributionData}
                 cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value, percent }) =>
-                  `${name}: ${value} (${(percent * 100).toFixed(0)}%)`
-                }
-                outerRadius="70%"
+                cy="45%"
+                labelLine={{
+                  stroke: "hsl(var(--muted-foreground))",
+                  strokeWidth: 1,
+                }}
+                label={({ cx, cy, midAngle, innerRadius, outerRadius, value, name }) => {
+                  const RADIAN = Math.PI / 180;
+                  const radius = outerRadius + 25;
+                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                  
+                  return (
+                    <text
+                      x={x}
+                      y={y}
+                      fill="hsl(var(--foreground))"
+                      textAnchor={x > cx ? 'start' : 'end'}
+                      dominantBaseline="central"
+                      className="text-xs md:text-sm font-medium"
+                    >
+                      {`${name}: ${value}`}
+                    </text>
+                  );
+                }}
+                outerRadius="55%"
                 dataKey="value"
               >
                 {distributionData.map((entry, index) => (
                   <Cell key={index} fill={entry.color} />
                 ))}
               </Pie>
+              <Legend 
+                verticalAlign="bottom"
+                height={36}
+                iconType="circle"
+                wrapperStyle={{
+                  paddingTop: '10px',
+                  fontSize: '12px',
+                }}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "8px",
+                  color: "hsl(var(--foreground))",
                 }}
               />
             </PieChart>
@@ -107,9 +137,12 @@ export const TradeDistribution = () => {
           Position Type Performance
         </h3>
 
-        <div className="w-full min-h-[300px]">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={positionData}>
+        <div className="w-full h-[320px] md:h-[350px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart 
+              data={positionData}
+              margin={{ top: 10, right: 10, bottom: 20, left: 0 }}
+            >
               <CartesianGrid
                 strokeDasharray="3 3"
                 stroke="hsl(var(--border))"
@@ -119,12 +152,17 @@ export const TradeDistribution = () => {
               <XAxis
                 dataKey="name"
                 stroke="hsl(var(--muted-foreground))"
-                style={{ fontSize: "12px" }}
+                style={{ fontSize: "11px" }}
+                tick={{ fill: "hsl(var(--muted-foreground))" }}
+                angle={0}
+                textAnchor="middle"
               />
 
               <YAxis
                 stroke="hsl(var(--muted-foreground))"
-                style={{ fontSize: "12px" }}
+                style={{ fontSize: "11px" }}
+                tick={{ fill: "hsl(var(--muted-foreground))" }}
+                width={40}
               />
 
               <Tooltip
@@ -132,6 +170,17 @@ export const TradeDistribution = () => {
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "8px",
+                  color: "hsl(var(--foreground))",
+                }}
+              />
+
+              <Legend
+                verticalAlign="bottom"
+                height={36}
+                iconType="rect"
+                wrapperStyle={{
+                  paddingTop: '10px',
+                  fontSize: '12px',
                 }}
               />
 
