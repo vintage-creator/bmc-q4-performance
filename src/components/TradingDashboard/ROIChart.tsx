@@ -1,7 +1,80 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { trades } from "@/data/tradingData";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, TooltipProps } from "recharts";
+import { trades, Trade } from "@/data/tradingData";
+
+interface ROIDataPoint {
+  date: string;
+  roi: number;
+  balance: number;
+  trade: number;
+  tradeDetails: Trade;
+}
+
+const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload as ROIDataPoint;
+    const trade = data.tradeDetails;
+    const isProfit = trade.profit > 0;
+    
+    return (
+      <div className="bg-card border border-border rounded-lg p-4 shadow-lg">
+        <p className="text-sm font-semibold text-foreground mb-2">
+          Trade #{data.trade} - {trade.item.toUpperCase()}
+        </p>
+        <div className="space-y-1.5 text-xs">
+          <div className="flex justify-between gap-4">
+            <span className="text-muted-foreground">Type:</span>
+            <span className={`font-medium ${trade.type === 'buy' ? 'text-success' : 'text-primary'}`}>
+              {trade.type.toUpperCase()}
+            </span>
+          </div>
+          <div className="flex justify-between gap-4">
+            <span className="text-muted-foreground">Size:</span>
+            <span className="text-foreground font-medium">{trade.size}</span>
+          </div>
+          <div className="flex justify-between gap-4">
+            <span className="text-muted-foreground">Open:</span>
+            <span className="text-foreground">{trade.openPrice.toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between gap-4">
+            <span className="text-muted-foreground">Close:</span>
+            <span className="text-foreground">{trade.closePrice.toLocaleString()}</span>
+          </div>
+          <div className="border-t border-border pt-1.5 mt-1.5">
+            <div className="flex justify-between gap-4">
+              <span className="text-muted-foreground">Profit/Loss:</span>
+              <span className={`font-semibold ${isProfit ? 'text-success' : 'text-destructive'}`}>
+                ${trade.profit.toFixed(2)}
+              </span>
+            </div>
+            {trade.commission !== 0 && (
+              <div className="flex justify-between gap-4">
+                <span className="text-muted-foreground">Commission:</span>
+                <span className="text-muted-foreground">${trade.commission.toFixed(2)}</span>
+              </div>
+            )}
+          </div>
+          <div className="border-t border-border pt-1.5 mt-1.5">
+            <div className="flex justify-between gap-4">
+              <span className="text-muted-foreground">Balance:</span>
+              <span className="text-foreground font-medium">${data.balance.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-muted-foreground font-semibold">ROI:</span>
+              <span className="text-success font-bold text-base">{data.roi.toFixed(2)}%</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border">
+          {data.date}
+        </p>
+      </div>
+    );
+  }
+  
+  return null;
+};
 
 export const ROIChart = () => {
   const initialBalance = 10000;
@@ -18,9 +91,10 @@ export const ROIChart = () => {
         roi: parseFloat(roi.toFixed(2)),
         balance: newBalance,
         trade: index + 1,
+        tradeDetails: trade,
       });
       return acc;
-    }, [] as Array<{ date: string; roi: number; balance: number; trade: number }>);
+    }, [] as ROIDataPoint[]);
 
   return (
     <motion.div
@@ -49,18 +123,7 @@ export const ROIChart = () => {
               style={{ fontSize: '12px' }}
               tickFormatter={(value) => `${value.toFixed(0)}%`}
             />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--card))', 
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px',
-                color: 'hsl(var(--foreground))'
-              }}
-              formatter={(value: number, name: string) => {
-                if (name === 'roi') return [`${value.toFixed(2)}%`, 'ROI'];
-                return [value, name];
-              }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Line 
               type="monotone" 
               dataKey="roi" 
