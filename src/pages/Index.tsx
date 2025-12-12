@@ -52,6 +52,7 @@ const Index = () => {
             <div className="text-center md:text-left">
               <h1 className="text-2xl font-bold text-foreground">Blue Marvel Capital</h1>
               <p className="text-sm text-muted-foreground">Performance Simulation Report</p>
+            </div>
 
             {/* Proprietary Badge */}
             <div className="flex items-center justify-center md:justify-end gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/30">
