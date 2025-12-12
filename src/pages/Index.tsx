@@ -20,8 +20,13 @@ import { RiskMetricsGauge } from "@/components/TradingDashboard/RiskMetricsGauge
 import { BenchmarkComparison } from "@/components/TradingDashboard/BenchmarkComparison";
 import { InsightsTips } from "@/components/TradingDashboard/InsightsTips";
 import { performanceMetrics, tradeStatistics } from "@/data/tradingData";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
+  // Recipient — change here when needed
+  const recipient = "Mr. Farouk Bernaoui";
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -34,8 +39,16 @@ const Index = () => {
                 Blue Marvel Capital
               </h1>
               <p className="text-sm text-muted-foreground">
-                Performance Simulation for Atlas FX Brokers
+                Performance Simulation Prepared for {recipient}
               </p>
+
+              {/* Prominent "Prepared for" */}
+              <div className="mt-3">
+                <div className="text-sm text-muted-foreground">Prepared for</div>
+                <div className="mt-1 text-2xl md:text-3xl font-extrabold text-primary tracking-tight">
+                  {recipient}
+                </div>
+              </div>
             </div>
 
             {/* Proprietary Badge */}
@@ -55,55 +68,88 @@ const Index = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8"
+          className="mb-6"
         >
           <Alert className="bg-warning/10 border-warning/50">
             <AlertCircle className="h-4 w-4 text-warning" />
             <AlertDescription className="text-warning-foreground text-white">
               <strong>Confidential:</strong> This trading data is proprietary
-              information of Blue Marvel Capital. Prepared for{" "}
-              <a
-                href="https://atlasfxbrokers.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-warning"
-              >
-                atlasfxbrokers.com
-              </a>{" "}
-              - Unauthorized distribution or reproduction is prohibited.
+              information of Blue Marvel Capital. Prepared exclusively for{" "}
+              <span className="font-bold text-lg text-white">{recipient}</span>.
+              Unauthorized distribution or reproduction is prohibited.
             </AlertDescription>
           </Alert>
         </motion.div>
 
-        {/* Capital Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <MetricCard
-            title="Initial Capital"
-            value={`$${performanceMetrics.initialBalance.toLocaleString()}`}
-            subtitle="Starting Investment"
-            icon={DollarSign}
-            trend="neutral"
-            tooltip="Initial capital allocated for this performance simulation."
-            delay={0}
-          />
-          <MetricCard
-            title="Current Balance"
-            value={`$${performanceMetrics.balance.toLocaleString()}`}
-            subtitle={`+$${performanceMetrics.totalNetProfit.toLocaleString()} profit`}
-            icon={DollarSign}
-            trend="up"
-            tooltip="Current portfolio value after all trades."
-            delay={0.1}
-          />
-          <MetricCard
-            title="Total Return"
-            value={`${performanceMetrics.roi}%`}
-            subtitle="Portfolio Performance"
-            icon={TrendingUp}
-            trend="up"
-            tooltip="Total percentage return on initial capital of $10,000."
-            delay={0.2}
-          />
+        {/* Big Personal Heading */}
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-primary">
+            Prepared For: {recipient}
+          </h2>
+          <p className="text-muted-foreground mt-2">
+            Personalized Performance Simulation Report — November 2025
+          </p>
+        </div>
+
+        {/* Capital Overview + Recipient Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <MetricCard
+              title="Initial Capital"
+              value={`$${performanceMetrics.initialBalance.toLocaleString()}`}
+              subtitle="Starting Investment"
+              icon={DollarSign}
+              trend="neutral"
+              tooltip="Initial capital allocated for this performance simulation."
+              delay={0}
+            />
+            <MetricCard
+              title="Current Balance"
+              value={`$${performanceMetrics.balance.toLocaleString()}`}
+              subtitle={`+$${performanceMetrics.totalNetProfit.toLocaleString()} profit`}
+              icon={DollarSign}
+              trend="up"
+              tooltip="Current portfolio value after all trades."
+              delay={0.1}
+            />
+            <MetricCard
+              title="Total Return"
+              value={`${performanceMetrics.roi}%`}
+              subtitle="Portfolio Performance"
+              icon={TrendingUp}
+              trend="up"
+              tooltip="Total percentage return on initial capital."
+              delay={0.2}
+            />
+          </div>
+
+          {/* Recipient Summary — large amount + name */}
+          <div className="md:col-span-1">
+            <Card className="border border-border/50 bg-white/95 shadow-md">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-xs text-muted-foreground">Prepared for</div>
+
+                    {/* Big amount (same scale as MetricCard money) */}
+                    <div className="mt-2 text-2xl md:text-3xl font-extrabold text-foreground">
+                      ${performanceMetrics.initialBalance.toLocaleString()}
+                    </div>
+
+                    {/* Prominent name in same visual weight */}
+                    <div className="mt-1 text-lg md:text-xl font-semibold text-primary">
+                      {recipient}
+                    </div>
+
+                    <div className="mt-2 text-xs text-muted-foreground">As of November 2025</div>
+                  </div>
+                  <div className="ml-4 shrink-0">
+                    <Badge className="bg-primary/10 text-primary border-primary/30">Client</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Key Performance Metrics */}
@@ -264,7 +310,7 @@ const Index = () => {
       <footer className="border-t border-border mt-16 py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>© 2025 Blue Marvel Capital. All rights reserved.</p>
-          <p className="mt-2">Performance Simulation - Prepared for Atlas FX Brokers</p>
+          <p className="mt-2">Performance Simulation — Prepared for {recipient}</p>
         </div>
       </footer>
     </div>
