@@ -75,7 +75,38 @@ const Index = () => {
           </Alert>
         </motion.div>
 
-        {/* Key Metrics Grid */}
+        {/* Capital Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <MetricCard
+            title="Initial Capital"
+            value={`$${performanceMetrics.initialBalance.toLocaleString()}`}
+            subtitle="Starting Investment"
+            icon={DollarSign}
+            trend="neutral"
+            tooltip="Initial capital allocated for this performance simulation."
+            delay={0}
+          />
+          <MetricCard
+            title="Current Balance"
+            value={`$${performanceMetrics.balance.toLocaleString()}`}
+            subtitle={`+$${performanceMetrics.totalNetProfit.toLocaleString()} profit`}
+            icon={DollarSign}
+            trend="up"
+            tooltip="Current portfolio value after all trades."
+            delay={0.1}
+          />
+          <MetricCard
+            title="Total Return"
+            value={`${performanceMetrics.roi}%`}
+            subtitle="Portfolio Performance"
+            icon={TrendingUp}
+            trend="up"
+            tooltip="Total percentage return on initial capital of $10,000."
+            delay={0.2}
+          />
+        </div>
+
+        {/* Key Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
             title="Total Net Profit"
@@ -84,16 +115,7 @@ const Index = () => {
             icon={DollarSign}
             trend="up"
             tooltip="Total profit after all commissions and fees for November 2025."
-            delay={0}
-          />
-          <MetricCard
-            title="Portfolio Return"
-            value={`${performanceMetrics.roi}%`}
-            subtitle="Total Return on Investment"
-            icon={TrendingUp}
-            trend="up"
-            tooltip="Total portfolio return: 37% gain on initial capital of $10,000."
-            delay={0.1}
+            delay={0.3}
           />
           <MetricCard
             title="Sharpe Ratio"
@@ -102,7 +124,7 @@ const Index = () => {
             icon={Gauge}
             trend="up"
             tooltip="Risk-adjusted return measure. Above 2.0 is considered excellent. Calculated against 4% US T-Bill risk-free rate."
-            delay={0.2}
+            delay={0.4}
           />
           <MetricCard
             title="Alpha"
@@ -111,7 +133,16 @@ const Index = () => {
             icon={LineChart}
             trend="up"
             tooltip="Alpha measures outperformance relative to benchmark. 33% alpha indicates exceptional active management."
-            delay={0.3}
+            delay={0.5}
+          />
+          <MetricCard
+            title="Win Rate"
+            value={`${tradeStatistics.profitTradesPercent}%`}
+            subtitle={`${tradeStatistics.profitTrades} of ${tradeStatistics.totalTrades} trades`}
+            icon={Target}
+            trend="up"
+            tooltip="Percentage of profitable trades. Industry average is 40-60%. 80.65% is exceptional."
+            delay={0.6}
           />
         </div>
 
@@ -143,31 +174,13 @@ const Index = () => {
         {/* Risk & Trading Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
-            title="Current Balance"
-            value={`$${performanceMetrics.balance.toLocaleString()}`}
-            subtitle={`Initial: $${performanceMetrics.initialBalance.toLocaleString()}`}
-            icon={DollarSign}
-            trend="up"
-            tooltip="Current account equity including all closed positions."
-            delay={0.4}
-          />
-          <MetricCard
-            title="Win Rate"
-            value={`${tradeStatistics.profitTradesPercent}%`}
-            subtitle={`${tradeStatistics.profitTrades} of ${tradeStatistics.totalTrades} trades`}
-            icon={Target}
-            trend="up"
-            tooltip="Percentage of profitable trades. Industry average is 40-60%. 80.65% is exceptional."
-            delay={0.5}
-          />
-          <MetricCard
             title="Profit Factor"
             value={performanceMetrics.profitFactor.toFixed(2)}
             subtitle="Risk-Reward Ratio"
             icon={Activity}
             trend="up"
             tooltip="Ratio of gross profit to gross loss. Above 2.0 is excellent. 4.40 is outstanding."
-            delay={0.6}
+            delay={0.4}
           />
           <MetricCard
             title="Std Deviation"
@@ -176,6 +189,24 @@ const Index = () => {
             icon={BarChart3}
             trend="neutral"
             tooltip="Standard deviation of returns (14.39%). Lower volatility with high returns indicates efficient risk management."
+            delay={0.5}
+          />
+          <MetricCard
+            title="Excess Return"
+            value={`${performanceMetrics.excessReturn}%`}
+            subtitle={`Avg: ${performanceMetrics.averageExcessReturn}%`}
+            icon={TrendingUp}
+            trend="up"
+            tooltip="Return above risk-free rate (4% US T-Bill). 25% excess return demonstrates strong performance."
+            delay={0.6}
+          />
+          <MetricCard
+            title="Risk-Free Rate"
+            value={`${performanceMetrics.riskFreeRate}%`}
+            subtitle="US T-Bill (3 Month)"
+            icon={BarChart3}
+            trend="neutral"
+            tooltip="Baseline risk-free rate used for Sharpe ratio calculation."
             delay={0.7}
           />
         </div>
