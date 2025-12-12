@@ -27,6 +27,21 @@ const Index = () => {
   // Recipient — change here when needed
   const recipient = "Mr. Farouk Bernaoui";
 
+  // Client share configuration
+  const clientSharePercent = 0.6; // 60%
+  // Use totalNetProfit as the base profit amount (3,653.79 in your example)
+  const rawProfit = Number(performanceMetrics.totalNetProfit) || 0;
+
+  // compute take-home
+  const clientTakeHome = +(rawProfit * clientSharePercent);
+  // formatted strings
+  const fmtMoney = (n: number) =>
+    n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const rawProfitFormatted = fmtMoney(rawProfit);
+  const takeHomeFormatted = fmtMoney(clientTakeHome);
+  const percentText = `${Math.round(clientSharePercent * 100)}%`;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -35,12 +50,8 @@ const Index = () => {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             {/* Title */}
             <div className="text-center md:text-left">
-              <h1 className="text-2xl font-bold text-foreground">
-                Blue Marvel Capital
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Performance Simulation Prepared for {recipient}
-              </p>
+              <h1 className="text-2xl font-bold text-foreground">Blue Marvel Capital</h1>
+              <p className="text-sm text-muted-foreground">Performance Simulation Report</p>
 
               {/* Prominent "Prepared for" */}
               <div className="mt-3">
@@ -54,9 +65,7 @@ const Index = () => {
             {/* Proprietary Badge */}
             <div className="flex items-center justify-center md:justify-end gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/30">
               <Lock className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">
-                Proprietary Data
-              </span>
+              <span className="text-sm font-medium text-primary">Proprietary Data</span>
             </div>
           </div>
         </div>
@@ -73,22 +82,18 @@ const Index = () => {
           <Alert className="bg-warning/10 border-warning/50">
             <AlertCircle className="h-4 w-4 text-warning" />
             <AlertDescription className="text-warning-foreground text-white">
-              <strong>Confidential:</strong> This trading data is proprietary
-              information of Blue Marvel Capital. Prepared exclusively for{" "}
-              <span className="font-bold text-lg text-white">{recipient}</span>.
-              Unauthorized distribution or reproduction is prohibited.
+              <strong>Confidential:</strong> This trading data is proprietary information of
+              Blue Marvel Capital. Prepared exclusively for{" "}
+              <span className="font-bold text-white">{recipient}</span>. Unauthorized distribution or reproduction
+              is prohibited.
             </AlertDescription>
           </Alert>
         </motion.div>
 
         {/* Big Personal Heading */}
         <div className="mb-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-primary">
-            Prepared For: {recipient}
-          </h2>
-          <p className="text-muted-foreground mt-2">
-            Personalized Performance Simulation Report — November 2025
-          </p>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-primary">Prepared For: {recipient}</h2>
+          <p className="text-muted-foreground mt-2">Personalized Performance Simulation Report — November 2025</p>
         </div>
 
         {/* Capital Overview + Recipient Summary */}
@@ -123,27 +128,52 @@ const Index = () => {
             />
           </div>
 
-          {/* Recipient Summary — large amount + name */}
+          {/* Recipient Summary — large amount + name + take-home */}
           <div className="md:col-span-1">
             <Card className="border border-border/50 bg-white/95 shadow-md">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
                     <div className="text-xs text-muted-foreground">Prepared for</div>
 
                     {/* Big amount (same scale as MetricCard money) */}
                     <div className="mt-2 text-2xl md:text-3xl font-extrabold text-foreground">
-                      ${performanceMetrics.initialBalance.toLocaleString()}
+                      ${rawProfitFormatted}
                     </div>
 
-                    {/* Prominent name in same visual weight */}
-                    <div className="mt-1 text-lg md:text-xl font-semibold text-primary">
-                      {recipient}
+                    {/* Prominent name in same visual weight as the big amount */}
+                    <div className="mt-1 text-lg md:text-xl font-semibold text-primary">{recipient}</div>
+
+                    {/* Client take-home block */}
+                    <div className="mt-3 p-3 rounded-md bg-green-50 border border-green-100">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <div>
+                          <div className="text-xs text-muted-foreground">Client Take-Home</div>
+                          <div className="mt-1 text-2xl md:text-3xl font-extrabold text-green-700">
+                            ${takeHomeFormatted}
+                          </div>
+                        </div>
+
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-green-700">{percentText}</div>
+                          <div className="text-xs text-muted-foreground mt-1">of profit</div>
+                        </div>
+                      </div>
+
+                      {/* formula line */}
+                      <div className="mt-2 text-xs text-muted-foreground">
+                        <span className="font-mono">${rawProfitFormatted}</span>{" "}
+                        <span className="mx-1">×</span>
+                        <span className="font-medium text-green-700 ml-1">{percentText}</span>{" "}
+                        <span className="mx-1">=</span>
+                        <span className="font-mono ml-1">${takeHomeFormatted}</span>
+                      </div>
                     </div>
 
                     <div className="mt-2 text-xs text-muted-foreground">As of November 2025</div>
                   </div>
-                  <div className="ml-4 shrink-0">
+
+                  <div className="shrink-0">
                     <Badge className="bg-primary/10 text-primary border-primary/30">Client</Badge>
                   </div>
                 </div>
