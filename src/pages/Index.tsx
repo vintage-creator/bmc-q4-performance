@@ -53,15 +53,6 @@ const Index = () => {
               <h1 className="text-2xl font-bold text-foreground">Blue Marvel Capital</h1>
               <p className="text-sm text-muted-foreground">Performance Simulation Report</p>
 
-              {/* Prominent "Prepared for" */}
-              <div className="mt-3">
-                <div className="text-sm text-muted-foreground">Prepared for</div>
-                <div className="mt-1 text-2xl md:text-3xl font-extrabold text-primary tracking-tight">
-                  {recipient}
-                </div>
-              </div>
-            </div>
-
             {/* Proprietary Badge */}
             <div className="flex items-center justify-center md:justify-end gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/30">
               <Lock className="w-4 h-4 text-primary" />
