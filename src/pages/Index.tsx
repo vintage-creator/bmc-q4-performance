@@ -130,18 +130,18 @@ const Index = () => {
             <Card className="relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 shadow-xl h-full">
               {/* Animated background accent */}
               <motion.div
-                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/20 to-transparent rounded-bl-full"
+                className="absolute top-0 right-0 w-20 sm:w-32 h-20 sm:h-32 bg-gradient-to-bl from-primary/20 to-transparent rounded-bl-full"
                 animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
               
-              <CardContent className="p-5 relative z-10">
+              <CardContent className="p-3 sm:p-5 relative z-10">
                 {/* Header with badge */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <div className="flex items-center justify-between mb-3 sm:mb-4 gap-2">
+                  <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Client Summary
                   </span>
-                  <Badge className="bg-primary text-primary-foreground shadow-sm">
+                  <Badge className="bg-primary text-primary-foreground shadow-sm text-[10px] sm:text-xs px-2 py-0.5">
                     {percentText} Share
                   </Badge>
                 </div>
@@ -152,39 +152,39 @@ const Index = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <p className="text-sm text-muted-foreground">Prepared for</p>
-                  <h3 className="text-lg font-bold text-foreground mt-0.5">{recipient}</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Prepared for</p>
+                  <h3 className="text-base sm:text-lg font-bold text-foreground mt-0.5 truncate">{recipient}</h3>
                 </motion.div>
 
                 {/* Divider */}
-                <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-4" />
+                <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-3 sm:my-4" />
 
                 {/* Total Profit */}
                 <motion.div
-                  className="mb-4"
+                  className="mb-3 sm:mb-4"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <p className="text-xs text-muted-foreground mb-1">Total Profit Generated</p>
-                  <p className="text-2xl font-bold text-foreground">${rawProfitFormatted}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-1">Total Profit Generated</p>
+                  <p className="text-xl sm:text-2xl font-bold text-foreground">${rawProfitFormatted}</p>
                 </motion.div>
 
                 {/* Client Take-Home - Highlighted */}
                 <motion.div
-                  className="p-4 rounded-lg bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20"
+                  className="p-3 sm:p-4 rounded-lg bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-medium text-green-700 dark:text-green-400 uppercase tracking-wide">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] sm:text-xs font-medium text-green-700 dark:text-green-400 uppercase tracking-wide">
                         Your Take-Home
                       </p>
                       <motion.p
-                        className="text-3xl font-extrabold text-green-600 dark:text-green-400 mt-1"
+                        className="text-xl sm:text-2xl md:text-3xl font-extrabold text-green-600 dark:text-green-400 mt-1 truncate"
                         initial={{ scale: 0.9 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
@@ -193,24 +193,24 @@ const Index = () => {
                       </motion.p>
                     </div>
                     <motion.div
-                      className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center"
+                      className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-green-500/20 flex items-center justify-center shrink-0"
                       animate={{ rotate: [0, 5, -5, 0] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400" />
+                      <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-600 dark:text-green-400" />
                     </motion.div>
                   </div>
 
                   {/* Formula */}
-                  <div className="mt-3 pt-3 border-t border-green-500/20">
-                    <p className="text-xs text-muted-foreground font-mono">
+                  <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-green-500/20">
+                    <p className="text-[10px] sm:text-xs text-muted-foreground font-mono truncate">
                       ${rawProfitFormatted} × {percentText} = ${takeHomeFormatted}
                     </p>
                   </div>
                 </motion.div>
 
                 {/* Footer */}
-                <p className="text-xs text-muted-foreground mt-4 text-center">
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-3 sm:mt-4 text-center">
                   Performance Period: Q4/2025
                 </p>
               </CardContent>
