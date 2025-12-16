@@ -167,16 +167,21 @@ export const RiskMetricsGauge = () => {
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-border">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8 pt-6 border-t border-border">
           <div className="text-center p-4 bg-secondary/50 rounded-lg">
             <TrendingUp className="w-5 h-5 text-success mx-auto mb-2" />
-            <p className="text-2xl font-bold text-foreground">{performanceMetrics.excessReturn}%</p>
-            <p className="text-xs text-muted-foreground">Excess Return</p>
+            <p className="text-2xl font-bold text-foreground">${performanceMetrics.highWaterMark.toLocaleString()}</p>
+            <p className="text-xs text-muted-foreground">High-Water Mark</p>
           </div>
           <div className="text-center p-4 bg-secondary/50 rounded-lg">
             <Activity className="w-5 h-5 text-primary mx-auto mb-2" />
-            <p className="text-2xl font-bold text-foreground">{performanceMetrics.averageExcessReturn}%</p>
-            <p className="text-xs text-muted-foreground">Avg Excess Return</p>
+            <p className="text-2xl font-bold text-foreground">{performanceMetrics.hurdleRate}%</p>
+            <p className="text-xs text-muted-foreground">Hurdle Rate</p>
+          </div>
+          <div className="text-center p-4 bg-secondary/50 rounded-lg">
+            <TrendingUp className="w-5 h-5 text-chart-2 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-foreground">{performanceMetrics.excessReturn}%</p>
+            <p className="text-xs text-muted-foreground">Excess Return</p>
           </div>
           <div className="text-center p-4 bg-secondary/50 rounded-lg">
             <Shield className="w-5 h-5 text-chart-2 mx-auto mb-2" />

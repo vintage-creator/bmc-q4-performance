@@ -72,7 +72,12 @@ export const performanceMetrics = {
   averageExcessReturn: 8, // (%)
   standardDeviation: 14.39, // 0.1439 * 100
   variance: 2.07, // 0.0207 * 100
+  squaredDeviation: 4.143, // 0.04143 * 100
   alpha: 33, // Q4/25 Alpha (%)
+  
+  // High-Water Mark & Hurdle Rate
+  highWaterMark: 13653.79, // Peak portfolio value achieved
+  hurdleRate: 8, // Minimum target return (%)
 };
 
 export const tradeStatistics = {

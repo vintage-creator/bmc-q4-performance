@@ -1,23 +1,15 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { trades } from "@/data/tradingData";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { performanceMetrics } from "@/data/tradingData";
 
 export const PerformanceChart = () => {
-  const cumulativeData = trades
-    .sort((a, b) => new Date(a.closeTime).getTime() - new Date(b.closeTime).getTime())
-    .reduce((acc, trade, index) => {
-      const prevBalance = index === 0 ? 10000 : acc[index - 1].balance;
-      const newBalance = prevBalance + trade.profit;
-      
-      acc.push({
-        date: new Date(trade.closeTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        balance: parseFloat(newBalance.toFixed(2)),
-        profit: trade.profit,
-        trade: index + 1,
-      });
-      return acc;
-    }, [] as Array<{ date: string; balance: number; profit: number; trade: number }>);
+  // Use Q4/2025 simulation data - showing monthly progression
+  const simulationData = [
+    { month: "Oct '25", balance: performanceMetrics.initialBalance, label: "Starting Balance" },
+    { month: "Nov '25", balance: performanceMetrics.balance, label: "End of Simulation" },
+    { month: "Dec '25", balance: performanceMetrics.balance, label: "Current" },
+  ];
 
   return (
     <motion.div
@@ -26,9 +18,25 @@ export const PerformanceChart = () => {
       transition={{ duration: 0.5, delay: 0.3 }}
     >
       <Card className="p-6 bg-card border-border">
-        <h3 className="text-xl font-bold text-foreground mb-6">Cumulative Performance</h3>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+          <h3 className="text-xl font-bold text-foreground">Cumulative Performance</h3>
+          <div className="flex items-center gap-4 mt-2 md:mt-0 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">Initial:</span>
+              <span className="font-semibold text-foreground">${performanceMetrics.initialBalance.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">Final:</span>
+              <span className="font-semibold text-success">${performanceMetrics.balance.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">Profit:</span>
+              <span className="font-semibold text-success">+${performanceMetrics.totalNetProfit.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
         <ResponsiveContainer width="100%" height={350}>
-          <AreaChart data={cumulativeData}>
+          <AreaChart data={simulationData}>
             <defs>
               <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
@@ -37,7 +45,7 @@ export const PerformanceChart = () => {
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
             <XAxis 
-              dataKey="date" 
+              dataKey="month" 
               stroke="hsl(var(--muted-foreground))"
               style={{ fontSize: '12px' }}
             />
@@ -45,6 +53,7 @@ export const PerformanceChart = () => {
               stroke="hsl(var(--muted-foreground))"
               style={{ fontSize: '12px' }}
               tickFormatter={(value) => `$${value.toLocaleString()}`}
+              domain={[9000, 15000]}
             />
             <Tooltip 
               contentStyle={{ 
@@ -64,6 +73,9 @@ export const PerformanceChart = () => {
             />
           </AreaChart>
         </ResponsiveContainer>
+        <p className="text-xs text-muted-foreground mt-4 text-center">
+          Q4/2025 Performance Simulation • Total Return: {performanceMetrics.roi}%
+        </p>
       </Card>
     </motion.div>
   );
