@@ -68,7 +68,7 @@ const Index = () => {
           <AlertCircle className="h-4 w-4 text-warning" />
           <AlertDescription className="text-white">
             <strong>Confidential:</strong> Prepared exclusively for{" "}
-            <span className="font-bold">{recipient}</span>.
+            <span className="font-bold">{recipient}</span>. Unauthorized distribution or reproduction is prohibited.
           </AlertDescription>
         </Alert>
 
