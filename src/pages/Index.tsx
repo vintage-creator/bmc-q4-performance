@@ -85,7 +85,7 @@ const Index = () => {
         {/* Big Personal Heading */}
         <div className="mb-8 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold text-primary">Prepared For: {recipient}</h2>
-          <p className="text-muted-foreground mt-2">Personalized Performance Simulation Report — November 2025</p>
+          <p className="text-muted-foreground mt-2">Personalized Performance Simulation Report — Q4/2025</p>
         </div>
 
         {/* Capital Overview + Recipient Summary */}
@@ -162,7 +162,7 @@ const Index = () => {
                       </div>
                     </div>
 
-                    <div className="mt-2 text-xs text-muted-foreground">As of November 2025</div>
+                    <div className="mt-2 text-xs text-muted-foreground">As of Q4/2025</div>
                   </div>
 
                   <div className="shrink-0">
@@ -179,10 +179,10 @@ const Index = () => {
           <MetricCard
             title="Total Net Profit"
             value={`$${performanceMetrics.totalNetProfit.toLocaleString()}`}
-            subtitle="November 2025"
+            subtitle="Q4/2025"
             icon={DollarSign}
             trend="up"
-            tooltip="Total profit after all commissions and fees for November 2025."
+            tooltip="Total profit after all commissions and fees for Q4/2025."
             delay={0.3}
           />
           <MetricCard
@@ -260,12 +260,12 @@ const Index = () => {
             delay={0.5}
           />
           <MetricCard
-            title="Excess Return"
-            value={`${performanceMetrics.excessReturn}%`}
-            subtitle={`Avg: ${performanceMetrics.averageExcessReturn}%`}
-            icon={TrendingUp}
-            trend="up"
-            tooltip="Return above risk-free rate (4% US T-Bill). 25% excess return demonstrates strong performance."
+            title="Avg Loss"
+            value={`$${Math.abs(tradeStatistics.averageLossTrade).toFixed(2)}`}
+            subtitle="Per losing trade"
+            icon={Activity}
+            trend="down"
+            tooltip="Average loss on losing trades. Smaller losses indicate good risk management."
             delay={0.6}
           />
           <MetricCard
@@ -282,13 +282,22 @@ const Index = () => {
         {/* Additional Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
-            title="Excess Return"
-            value={`${performanceMetrics.excessReturn}%`}
-            subtitle={`Avg: ${performanceMetrics.averageExcessReturn}%`}
+            title="High-Water Mark"
+            value={`$${performanceMetrics.highWaterMark.toLocaleString()}`}
+            subtitle="Peak Portfolio Value"
             icon={TrendingUp}
             trend="up"
-            tooltip="Return above risk-free rate (4% US T-Bill). 25% excess return demonstrates strong performance."
+            tooltip="The highest portfolio value achieved during the simulation period."
             delay={0.8}
+          />
+          <MetricCard
+            title="Hurdle Rate"
+            value={`${performanceMetrics.hurdleRate}%`}
+            subtitle="Minimum Target Return"
+            icon={Target}
+            trend="neutral"
+            tooltip="The minimum return threshold that must be exceeded before performance fees apply."
+            delay={0.9}
           />
           <MetricCard
             title="Avg Win"
@@ -297,21 +306,12 @@ const Index = () => {
             icon={TrendingUp}
             trend="up"
             tooltip="Average profit on winning trades. Higher values indicate strong profit-taking."
-            delay={0.9}
-          />
-          <MetricCard
-            title="Avg Loss"
-            value={`$${Math.abs(tradeStatistics.averageLossTrade).toFixed(2)}`}
-            subtitle="Per losing trade"
-            icon={Activity}
-            trend="down"
-            tooltip="Average loss on losing trades. Smaller losses indicate good risk management."
             delay={1.0}
           />
           <MetricCard
             title="Total Trades"
             value={tradeStatistics.totalTrades}
-            subtitle="Q4 2025 Activity"
+            subtitle="Q4/2025 Activity"
             icon={BarChart3}
             trend="neutral"
             tooltip="Total number of closed positions for the period."
