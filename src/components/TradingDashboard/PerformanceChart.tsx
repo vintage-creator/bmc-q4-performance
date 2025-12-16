@@ -14,7 +14,6 @@ import {
 import { performanceMetrics } from "@/data/tradingData";
 
 export const PerformanceChart: React.FC = () => {
-  // Q4/2025 simulation data - showing monthly progression and labels
   const simulationData = [
     { month: "Oct '25", balance: performanceMetrics.initialBalance, label: "Starting Balance" },
     { month: "Nov '25", balance: performanceMetrics.balance, label: "End of Simulation" },
@@ -26,8 +25,6 @@ export const PerformanceChart: React.FC = () => {
 
   useEffect(() => {
     if (!containerRef.current) return;
-
-    // Initialize width if already visible
     setContainerWidth(containerRef.current.offsetWidth || 0);
 
     const ro = new ResizeObserver((entries) => {
@@ -37,7 +34,6 @@ export const PerformanceChart: React.FC = () => {
     });
 
     ro.observe(containerRef.current);
-
     return () => ro.disconnect();
   }, []);
 
@@ -47,35 +43,35 @@ export const PerformanceChart: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay: 0.15 }}
     >
-      <Card className="p-6 bg-card border-border w-full">
+      <Card className="p-6 bg-card border-border w-full overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <h3 className="text-xl font-bold text-foreground">Cumulative Performance</h3>
 
-          <div className="flex items-center gap-4 mt-3 md:mt-0 text-sm">
-            <div className="flex items-center gap-2">
+          {/* UPDATED: allow wrapping and shrinking on small screens */}
+          <div className="flex items-center gap-4 mt-3 md:mt-0 text-sm min-w-0 flex-wrap">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="text-muted-foreground">Initial:</span>
-              <span className="font-semibold text-foreground">
+              <span className="font-semibold text-foreground truncate max-w-[120px] text-right">
                 ${performanceMetrics.initialBalance.toLocaleString()}
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="text-muted-foreground">Final:</span>
-              <span className="font-semibold text-success">
+              <span className="font-semibold text-success truncate max-w-[120px] text-right">
                 ${performanceMetrics.balance.toLocaleString()}
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="text-muted-foreground">Profit:</span>
-              <span className="font-semibold text-success">
+              <span className="font-semibold text-success truncate max-w-[120px] text-right">
                 +${performanceMetrics.totalNetProfit.toLocaleString()}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Ensure parent provides concrete height so ResponsiveContainer can measure */}
         <div ref={containerRef} className="w-full h-[280px] md:h-[350px] relative">
           {containerWidth > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
@@ -122,7 +118,6 @@ export const PerformanceChart: React.FC = () => {
                   labelFormatter={(label) => `${label}`}
                 />
 
-                {/* Area: show visible dots and point labels */}
                 <Area
                   type="monotone"
                   dataKey="balance"
@@ -130,9 +125,8 @@ export const PerformanceChart: React.FC = () => {
                   strokeWidth={3}
                   fill="url(#colorBalance)"
                   isAnimationActive={false}
-                  dot={{ r: 4 }} // visible points so labels align to actual values
+                  dot={{ r: 4 }}
                 >
-                  {/* LabelList will render the `label` field above each point */}
                   <LabelList dataKey="label" position="top" style={{ fontSize: 12, fill: "var(--muted-foreground)" }} />
                 </Area>
               </AreaChart>
