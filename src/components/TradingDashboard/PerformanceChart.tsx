@@ -47,25 +47,26 @@ export const PerformanceChart: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <h3 className="text-xl font-bold text-foreground">Cumulative Performance</h3>
 
-          {/* UPDATED: allow wrapping and shrinking on small screens */}
+          {/* SUMMARY: allow wrapping; force Profit to its own row on small screens */}
           <div className="flex items-center gap-4 mt-3 md:mt-0 text-sm min-w-0 flex-wrap">
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-muted-foreground">Initial:</span>
-              <span className="font-semibold text-foreground truncate max-w-[120px] text-right">
+              <span className="font-semibold text-foreground break-words">
                 ${performanceMetrics.initialBalance.toLocaleString()}
               </span>
             </div>
 
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-muted-foreground">Final:</span>
-              <span className="font-semibold text-success truncate max-w-[120px] text-right">
+              <span className="font-semibold text-success break-words">
                 ${performanceMetrics.balance.toLocaleString()}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 min-w-0">
+            {/* This element becomes full-width on small screens so it drops to the next line */}
+            <div className="flex items-center gap-2 min-w-0 w-full md:w-auto">
               <span className="text-muted-foreground">Profit:</span>
-              <span className="font-semibold text-success truncate max-w-[120px] text-right">
+              <span className="font-semibold text-success break-words">
                 +${performanceMetrics.totalNetProfit.toLocaleString()}
               </span>
             </div>
