@@ -107,7 +107,7 @@ const Index = () => {
           />
         </div>
 
-        {/* Client Summary - Centered */}
+        {/* Client Summary - Centered & Balanced */}
         <div className="flex justify-center mb-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -134,36 +134,38 @@ const Index = () => {
               </div>
 
               <CardContent className="p-6 sm:p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-                  {/* Client Info */}
+                {/* Use a 3-column grid with consistent vertical centering */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                  {/* Client Info (left) */}
                   <motion.div 
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="text-center lg:text-left"
+                    className="text-center lg:text-left min-w-0"
                   >
                     <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">Prepared for</p>
-                    <h3 className="text-xl font-bold text-foreground">{recipient}</h3>
+                    <h3 className="text-xl font-bold text-foreground break-words">{recipient}</h3>
                     <p className="text-xs text-muted-foreground mt-2">Q4/2025 Performance Report</p>
                   </motion.div>
 
-                  {/* Take Home - Center Focus */}
+                  {/* Take Home (middle) - centered and balanced */}
                   <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="lg:col-span-1 min-w-[280px]"
+                    className="flex items-center justify-center"
                   >
-                    <div className="rounded-2xl border-[3px] border-green-500/50 bg-gradient-to-br from-green-500/15 via-emerald-500/10 to-green-600/5 px-10 py-8 text-center shadow-lg shadow-green-500/10">
-                      <p className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3">
+                    <div className="w-full max-w-xs rounded-2xl border-2 border-green-500/30 bg-gradient-to-br from-green-500/15 via-emerald-500/10 to-green-600/5 p-5 text-center shadow-lg shadow-green-500/10">
+                      <p className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-2">
                         Your Take-Home
                       </p>
-                      <div className="flex items-center justify-center gap-4">
+
+                      <div className="flex items-center justify-center gap-3">
                         <motion.div
                           animate={{ 
-                            scale: [1, 1.15, 1],
+                            scale: [1, 1.12, 1],
                             boxShadow: [
-                              "0 0 0 0 rgba(34, 197, 94, 0.4)",
+                              "0 0 0 0 rgba(34, 197, 94, 0.18)",
                               "0 0 0 10px rgba(34, 197, 94, 0)",
                               "0 0 0 0 rgba(34, 197, 94, 0)"
                             ]
@@ -173,30 +175,32 @@ const Index = () => {
                         >
                           <DollarSign className="w-6 h-6 text-green-500" />
                         </motion.div>
+
                         <motion.p 
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ delay: 0.8 }}
-                          className="text-3xl sm:text-4xl font-black text-green-500"
+                          transition={{ delay: 0.7 }}
+                          className="text-2xl sm:text-3xl md:text-3xl font-extrabold text-green-600 break-words"
                         >
                           ${takeHomeFormatted}
                         </motion.p>
                       </div>
-                      <p className="mt-4 text-xs text-muted-foreground font-mono bg-background/50 rounded-lg py-2 px-4 inline-block whitespace-nowrap">
+
+                      <p className="mt-3 text-xs text-muted-foreground font-mono bg-background/0 rounded-md py-2 px-3 inline-block break-words">
                         ${rawProfitFormatted} × {percentText} = ${takeHomeFormatted}
                       </p>
                     </div>
                   </motion.div>
 
-                  {/* Total Profit */}
+                  {/* Total Profit (right) */}
                   <motion.div 
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="text-center lg:text-right"
+                    className="text-center lg:text-right min-w-0"
                   >
                     <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">Total Profit Generated</p>
-                    <p className="text-2xl font-bold text-foreground">${rawProfitFormatted}</p>
+                    <p className="text-2xl font-bold text-foreground break-words">${rawProfitFormatted}</p>
                     <div className="flex items-center justify-center lg:justify-end gap-2 mt-2">
                       <TrendingUp className="w-4 h-4 text-green-500" />
                       <span className="text-sm text-green-500 font-medium">+{performanceMetrics.roi}%</span>
