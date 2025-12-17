@@ -110,59 +110,98 @@ const Index = () => {
         {/* Client Summary - Centered */}
         <div className="flex justify-center mb-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full max-w-2xl"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
+            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+            className="w-full max-w-3xl"
           >
-            <Card className="relative border-2 border-primary/30 shadow-xl bg-gradient-to-br from-card via-card to-primary/5 overflow-hidden">
-              {/* Pinned Icon */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                <div className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2">
-                  <Target className="w-4 h-4" />
-                  <span className="text-xs font-semibold uppercase tracking-wide">Client Summary</span>
+            <Card className="relative border-2 border-primary/30 shadow-2xl bg-gradient-to-br from-card via-card to-primary/10">
+              {/* Header with Badge */}
+              <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-transparent px-6 py-4 border-b border-primary/20">
+                <div className="flex items-center justify-center gap-3">
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Target className="w-5 h-5 text-primary" />
+                  </motion.div>
+                  <span className="text-sm font-bold uppercase tracking-widest text-primary">
+                    Client Summary
+                  </span>
+                  <Badge variant="secondary" className="ml-2">{percentText} Share</Badge>
                 </div>
               </div>
 
-              <CardContent className="pt-8 pb-6 px-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              <CardContent className="p-6 sm:p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
                   {/* Client Info */}
-                  <div className="text-center md:text-left">
-                    <p className="text-xs text-muted-foreground mb-1">Prepared for</p>
-                    <h3 className="text-lg font-bold">{recipient}</h3>
-                    <Badge className="mt-2">{percentText} Share</Badge>
-                  </div>
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="text-center lg:text-left"
+                  >
+                    <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">Prepared for</p>
+                    <h3 className="text-xl font-bold text-foreground">{recipient}</h3>
+                    <p className="text-xs text-muted-foreground mt-2">Q4/2025 Performance Report</p>
+                  </motion.div>
 
                   {/* Take Home - Center Focus */}
-                  <div className="md:col-span-1 flex justify-center">
-                    <div className="rounded-xl border border-green-500/30 bg-gradient-to-br from-green-500/10 to-emerald-500/10 p-5 text-center w-full max-w-xs">
-                      <p className="text-xs font-medium text-green-700 uppercase tracking-wide mb-2">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="lg:col-span-1"
+                  >
+                    <div className="rounded-2xl border-2 border-green-500/40 bg-gradient-to-br from-green-500/15 via-emerald-500/10 to-green-600/5 p-6 text-center shadow-lg shadow-green-500/10">
+                      <p className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3">
                         Your Take-Home
                       </p>
-                      <div className="flex items-center justify-center gap-3">
+                      <div className="flex items-center justify-center gap-4">
                         <motion.div
-                          animate={{ scale: [1, 1.1, 1] }}
+                          animate={{ 
+                            scale: [1, 1.15, 1],
+                            boxShadow: [
+                              "0 0 0 0 rgba(34, 197, 94, 0.4)",
+                              "0 0 0 10px rgba(34, 197, 94, 0)",
+                              "0 0 0 0 rgba(34, 197, 94, 0)"
+                            ]
+                          }}
                           transition={{ duration: 2, repeat: Infinity }}
-                          className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center shrink-0"
+                          className="w-12 h-12 rounded-full bg-green-500/25 flex items-center justify-center shrink-0"
                         >
-                          <DollarSign className="w-5 h-5 text-green-600" />
+                          <DollarSign className="w-6 h-6 text-green-500" />
                         </motion.div>
-                        <p className="text-2xl sm:text-3xl font-extrabold text-green-600">
+                        <motion.p 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.8 }}
+                          className="text-3xl sm:text-4xl font-black text-green-500"
+                        >
                           ${takeHomeFormatted}
-                        </p>
+                        </motion.p>
                       </div>
-                      <p className="mt-3 text-[10px] text-muted-foreground font-mono">
-                        ${rawProfitFormatted} × {percentText}
+                      <p className="mt-4 text-xs text-muted-foreground font-mono bg-background/50 rounded-lg py-2 px-3 inline-block">
+                        ${rawProfitFormatted} × {percentText} = ${takeHomeFormatted}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
 
                   {/* Total Profit */}
-                  <div className="text-center md:text-right">
-                    <p className="text-xs text-muted-foreground mb-1">Total Profit Generated</p>
-                    <p className="text-xl font-bold">${rawProfitFormatted}</p>
-                    <p className="text-xs text-muted-foreground mt-2">Q4/2025</p>
-                  </div>
+                  <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="text-center lg:text-right"
+                  >
+                    <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">Total Profit Generated</p>
+                    <p className="text-2xl font-bold text-foreground">${rawProfitFormatted}</p>
+                    <div className="flex items-center justify-center lg:justify-end gap-2 mt-2">
+                      <TrendingUp className="w-4 h-4 text-green-500" />
+                      <span className="text-sm text-green-500 font-medium">+{performanceMetrics.roi}%</span>
+                    </div>
+                  </motion.div>
                 </div>
               </CardContent>
             </Card>
