@@ -152,9 +152,9 @@ const Index = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="lg:col-span-1"
+                    className="lg:col-span-1 min-w-[280px]"
                   >
-                    <div className="rounded-2xl border-[3px] border-green-500/50 bg-gradient-to-br from-green-500/15 via-emerald-500/10 to-green-600/5 p-8 text-center shadow-lg shadow-green-500/10">
+                    <div className="rounded-2xl border-[3px] border-green-500/50 bg-gradient-to-br from-green-500/15 via-emerald-500/10 to-green-600/5 px-10 py-8 text-center shadow-lg shadow-green-500/10">
                       <p className="text-xs font-semibold text-green-400 uppercase tracking-widest mb-3">
                         Your Take-Home
                       </p>
@@ -182,7 +182,7 @@ const Index = () => {
                           ${takeHomeFormatted}
                         </motion.p>
                       </div>
-                      <p className="mt-4 text-xs text-muted-foreground font-mono bg-background/50 rounded-lg py-2 px-3 inline-block">
+                      <p className="mt-4 text-xs text-muted-foreground font-mono bg-background/50 rounded-lg py-2 px-4 inline-block whitespace-nowrap">
                         ${rawProfitFormatted} × {percentText} = ${takeHomeFormatted}
                       </p>
                     </div>
