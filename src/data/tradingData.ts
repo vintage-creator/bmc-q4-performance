@@ -76,7 +76,7 @@ export const performanceMetrics = {
   alpha: 33, // Q4/25 Alpha (%)
   
   // High-Water Mark & Hurdle Rate
-  highWaterMark: 13653.79, // Peak portfolio value achieved
+  highWaterMark: 10800, // Initial capital ($10,000) + 8% hurdle ($800) - threshold to outperform for fees
   hurdleRate: 8, // Minimum target return (%)
 };
 
