@@ -67,8 +67,7 @@ const Index = () => {
         <Alert className="mb-6 bg-warning/10 border-warning/50">
           <AlertCircle className="h-4 w-4 text-warning" />
           <AlertDescription className="text-white">
-            <strong>Confidential:</strong> This trading data is proprietary information of Blue Marvel Capital. Prepared exclusively for{" "}
-            <span className="font-bold">{recipient}</span>. Unauthorized distribution or reproduction is prohibited.
+            <strong>Confidential:</strong> This trading data is proprietary information of Blue Marvel Capital. Unauthorized distribution or reproduction is prohibited.
           </AlertDescription>
         </Alert>
 
@@ -262,7 +261,7 @@ const Index = () => {
       <footer className="border-t border-border mt-16 py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>© 2025 Blue Marvel Capital. All rights reserved.</p>
-          <p className="mt-2">Performance Simulation — Prepared for {recipient}</p>
+          <p className="mt-2">Performance Simulation</p>
         </div>
       </footer>
     </div>
