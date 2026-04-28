@@ -19,33 +19,108 @@ import { TradeHistory } from "@/components/TradingDashboard/TradeHistory";
 import { RiskMetricsGauge } from "@/components/TradingDashboard/RiskMetricsGauge";
 import { BenchmarkComparison } from "@/components/TradingDashboard/BenchmarkComparison";
 import { InsightsTips } from "@/components/TradingDashboard/InsightsTips";
-import { performanceMetrics, tradeStatistics } from "@/data/tradingData";
+import {
+  performanceMetrics,
+  trades,
+  type Trade,
+} from "@/data/tradingData";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+
+const initialBalance = 10000;
+
+const tradeSummary = trades.reduce(
+  (acc, trade) => {
+    const net = trade.profit + trade.commission;
+
+    acc.totalTrades += 1;
+    acc.grossProfit += trade.profit > 0 ? trade.profit : 0;
+    acc.grossLoss += trade.profit < 0 ? Math.abs(trade.profit) : 0;
+    acc.totalCommissions += Math.abs(trade.commission);
+    acc.totalNetProfit += net;
+
+    if (net > 0) {
+      acc.profitTrades += 1;
+      acc.winningNetTrades.push(net);
+    } else if (net < 0) {
+      acc.lossTrades += 1;
+      acc.losingNetTrades.push(net);
+    }
+
+    if (trade.type === "sell") {
+      acc.shortPositions += 1;
+      if (net > 0) acc.shortWins += 1;
+    } else {
+      acc.longPositions += 1;
+      if (net > 0) acc.longWins += 1;
+    }
+
+    return acc;
+  },
+  {
+    totalTrades: 0,
+    grossProfit: 0,
+    grossLoss: 0,
+    totalCommissions: 0,
+    totalNetProfit: 0,
+    profitTrades: 0,
+    lossTrades: 0,
+    shortPositions: 0,
+    shortWins: 0,
+    longPositions: 0,
+    longWins: 0,
+    winningNetTrades: [] as number[],
+    losingNetTrades: [] as number[],
+  }
+);
+
+const grossProfit = tradeSummary.grossProfit;
+const grossLoss = tradeSummary.grossLoss;
+const totalCommissions = tradeSummary.totalCommissions;
+const totalNetProfit = tradeSummary.totalNetProfit;
+const balance = initialBalance + totalNetProfit;
+const roi = (totalNetProfit / initialBalance) * 100;
+const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : 0;
+const expectedPayoff = tradeSummary.totalTrades
+  ? totalNetProfit / tradeSummary.totalTrades
+  : 0;
+
+const profitTradesPercent = tradeSummary.totalTrades
+  ? (tradeSummary.profitTrades / tradeSummary.totalTrades) * 100
+  : 0;
+
+const lossTradesPercent = tradeSummary.totalTrades
+  ? (tradeSummary.lossTrades / tradeSummary.totalTrades) * 100
+  : 0;
+
+const shortWinRate = tradeSummary.shortPositions
+  ? (tradeSummary.shortWins / tradeSummary.shortPositions) * 100
+  : 0;
+
+const longWinRate = tradeSummary.longPositions
+  ? (tradeSummary.longWins / tradeSummary.longPositions) * 100
+  : 0;
+
+const averageProfitTrade = tradeSummary.winningNetTrades.length
+  ? tradeSummary.winningNetTrades.reduce((sum, value) => sum + value, 0) /
+    tradeSummary.winningNetTrades.length
+  : 0;
+
+const averageLossTrade = tradeSummary.losingNetTrades.length
+  ? tradeSummary.losingNetTrades.reduce((sum, value) => sum + value, 0) /
+    tradeSummary.losingNetTrades.length
+  : 0;
 
 const Index = () => {
-  const recipient = "";
-
-  const clientSharePercent = 0.6;
-  const rawProfit = Number(performanceMetrics.totalNetProfit) || 0;
-
-  const clientTakeHome = rawProfit * clientSharePercent;
-
-  const fmtMoney = (n: number) =>
-    n.toLocaleString(undefined, {
+  const fmtMoney = (value: number) =>
+    value.toLocaleString("en-GB", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
 
-  const rawProfitFormatted = fmtMoney(rawProfit);
-  const takeHomeFormatted = fmtMoney(clientTakeHome);
-  const percentText = `${Math.round(clientSharePercent * 100)}%`;
-
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-border bg-card/60 backdrop-blur-sm">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-4 md:flex-row">
           <div className="text-center md:text-left">
             <h1 className="text-2xl font-bold">Blue Marvel Capital</h1>
             <p className="text-sm text-muted-foreground">
@@ -53,8 +128,8 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/30">
-            <Lock className="w-4 h-4 text-primary" />
+          <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2">
+            <Lock className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">
               Proprietary Data
             </span>
@@ -63,184 +138,244 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Alert */}
-        <Alert className="mb-6 bg-warning/10 border-warning/50">
+        <Alert className="mb-6 border-warning/50 bg-warning/10">
           <AlertCircle className="h-4 w-4 text-warning" />
-          <AlertDescription className="text-white">
-            <strong>Confidential:</strong> This trading data is proprietary information of Blue Marvel Capital. Unauthorized distribution or reproduction is prohibited.
+          <AlertDescription>
+            <strong>Confidential:</strong> This trading data is proprietary
+            information of Blue Marvel Capital. Unauthorized distribution or
+            reproduction is prohibited.
           </AlertDescription>
         </Alert>
 
-        {/* Heading */}
         <div className="mb-8 text-center">
-          <p className="text-muted-foreground mt-2">
-            Personalized Performance Simulation Report — Q4/2025
+          <h2 className="text-3xl font-extrabold text-primary sm:text-4xl md:text-5xl">
+            Performance Report
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Q4 2025 trading performance summary
           </p>
         </div>
 
-        {/* Capital Overview - Top Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+        <div className="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <MetricCard
             title="Initial Capital"
-            value={`$${performanceMetrics.initialBalance.toLocaleString()}`}
-            subtitle="Starting Investment"
+            value={`$${fmtMoney(initialBalance)}`}
+            subtitle="Starting balance"
             icon={DollarSign}
             trend="neutral"
           />
           <MetricCard
             title="Current Balance"
-            value={`$${performanceMetrics.balance.toLocaleString()}`}
-            subtitle={`+$${performanceMetrics.totalNetProfit.toLocaleString()} profit`}
+            value={`$${fmtMoney(balance)}`}
+            subtitle={`+$${fmtMoney(totalNetProfit)} net profit`}
             icon={DollarSign}
             trend="up"
           />
           <MetricCard
             title="Total Return"
-            value={`${performanceMetrics.roi}%`}
-            subtitle="Portfolio Performance"
+            value={`${roi.toFixed(2)}%`}
+            subtitle="Portfolio performance"
             icon={TrendingUp}
             trend="up"
           />
         </div>
 
-        {/* Key Performance Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="mb-8 flex justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
+            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+            className="w-full max-w-4xl"
+          >
+            <Card className="border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 shadow-2xl">
+              <div className="border-b border-primary/20 bg-gradient-to-r from-primary/15 via-primary/5 to-transparent px-6 py-4">
+                <div className="flex items-center justify-center gap-3">
+                  <Target className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-bold uppercase tracking-widest text-primary">
+                    Performance Overview
+                  </span>
+                </div>
+              </div>
+
+              <CardContent className="p-6 sm:p-8">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+                  <div className="rounded-2xl border border-border bg-background/50 p-4 text-center">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Gross Profit
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-foreground">
+                      ${fmtMoney(grossProfit)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-border bg-background/50 p-4 text-center">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Gross Loss
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-foreground">
+                      ${fmtMoney(grossLoss)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-border bg-background/50 p-4 text-center">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Commissions
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-foreground">
+                      ${fmtMoney(totalCommissions)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-4 text-center">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-green-500">
+                      Net Profit
+                    </p>
+                    <p className="mt-2 text-2xl font-extrabold text-green-600">
+                      ${fmtMoney(totalNetProfit)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-5 rounded-xl border border-border bg-background/60 px-4 py-3 text-center text-sm text-muted-foreground">
+                  Net profit is calculated from profit plus commission across
+                  all closed trades.
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Net Profit"
-            value={`$${performanceMetrics.totalNetProfit.toLocaleString()}`}
-            subtitle="Q4/2025"
+            value={`$${fmtMoney(totalNetProfit)}`}
+            subtitle="Calculated from trades"
             icon={DollarSign}
             trend="up"
-            tooltip="Total profit after all commissions and fees for Q4/2025."
+            tooltip="Net profit after commissions across all closed trades."
             delay={0.3}
+          />
+          <MetricCard
+            title="Profit Factor"
+            value={profitFactor.toFixed(2)}
+            subtitle="Gross profit ÷ gross loss"
+            icon={Activity}
+            trend="up"
+            tooltip="Ratio of gross profit to gross loss. A value above 2.0 is generally strong."
+            delay={0.4}
           />
           <MetricCard
             title="Sharpe Ratio"
             value={performanceMetrics.sharpeRatioAnnualized.toFixed(2)}
-            subtitle="Annualized (Monthly: 0.58)"
+            subtitle="Annualised (monthly: 0.58)"
             icon={Gauge}
             trend="up"
-            tooltip="Risk-adjusted return measure. Above 2.0 is considered excellent. Calculated against 4% US T-Bill risk-free rate."
-            delay={0.4}
-          />
-          <MetricCard
-            title="Alpha"
-            value={`${performanceMetrics.alpha}%`}
-            subtitle="Q4 2025 Excess Performance"
-            icon={LineChart}
-            trend="up"
-            tooltip="Alpha measures outperformance relative to benchmark. 33% alpha indicates exceptional active management."
+            tooltip="Risk-adjusted return measure based on the supplied performance data."
             delay={0.5}
           />
           <MetricCard
             title="Win Rate"
-            value={`${tradeStatistics.profitTradesPercent}%`}
-            subtitle={`${tradeStatistics.profitTrades} of ${tradeStatistics.totalTrades} trades`}
+            value={`${profitTradesPercent.toFixed(2)}%`}
+            subtitle={`${tradeSummary.profitTrades} of ${tradeSummary.totalTrades} trades`}
             icon={Target}
             trend="up"
-            tooltip="Percentage of profitable trades. Industry average is 40-60%. 80.65% is exceptional."
+            tooltip="Percentage of profitable trades."
             delay={0.6}
           />
         </div>
 
-        {/* Performance Chart */}
         <div className="mb-8">
           <PerformanceChart />
         </div>
 
-        {/* ROI Chart */}
         <div className="mb-8">
           <ROIChart />
         </div>
 
-        {/* Trade Distribution Charts */}
         <div className="mb-8">
           <TradeDistribution />
         </div>
 
-        {/* Risk Metrics Gauge */}
         <div className="mb-8">
           <RiskMetricsGauge />
         </div>
 
-        {/* Benchmark Comparison */}
         <div className="mb-8">
           <BenchmarkComparison />
         </div>
 
-        {/* Risk & Trading Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
-            title="Profit Factor"
-            value={performanceMetrics.profitFactor.toFixed(2)}
-            subtitle="Risk-Reward Ratio"
-            icon={Activity}
+            title="Expected Payoff"
+            value={`$${fmtMoney(expectedPayoff)}`}
+            subtitle="Net profit per trade"
+            icon={LineChart}
             trend="up"
-            tooltip="Ratio of gross profit to gross loss. Above 2.0 is excellent. 4.40 is outstanding."
+            tooltip="Average net outcome per closed trade."
             delay={0.4}
           />
           <MetricCard
-            title="Std Deviation"
+            title="Standard Deviation"
             value={`${performanceMetrics.standardDeviation.toFixed(2)}%`}
-            subtitle="Portfolio Volatility"
+            subtitle="Portfolio volatility"
             icon={BarChart3}
             trend="neutral"
-            tooltip="Standard deviation of returns (14.39%). Lower volatility with high returns indicates efficient risk management."
+            tooltip="Standard deviation of returns."
             delay={0.5}
           />
           <MetricCard
-            title="Avg Loss"
-            value={`$${Math.abs(tradeStatistics.averageLossTrade).toFixed(2)}`}
+            title="Average Loss"
+            value={`$${Math.abs(averageLossTrade).toFixed(2)}`}
             subtitle="Per losing trade"
             icon={Activity}
             trend="down"
-            tooltip="Average loss on losing trades. Smaller losses indicate good risk management."
+            tooltip="Average net loss on losing trades."
             delay={0.6}
           />
           <MetricCard
             title="Risk-Free Rate"
             value={`${performanceMetrics.riskFreeRate}%`}
-            subtitle="US T-Bill (3 Month)"
+            subtitle="US 3-month T-bill"
             icon={BarChart3}
             trend="neutral"
-            tooltip="Baseline risk-free rate used for Sharpe ratio calculation."
+            tooltip="Baseline rate used in the Sharpe ratio calculation."
             delay={0.7}
           />
         </div>
 
-        {/* Additional Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="High-Water Mark"
             value={`$${performanceMetrics.highWaterMark.toLocaleString()}`}
-            subtitle="Peak Portfolio Value"
+            subtitle="Peak portfolio value"
             icon={TrendingUp}
             trend="up"
-            tooltip="The highest portfolio value achieved during the simulation period."
+            tooltip="The highest portfolio value achieved during the period."
             delay={0.8}
           />
           <MetricCard
             title="Hurdle Rate"
             value={`${performanceMetrics.hurdleRate}%`}
-            subtitle="Minimum Target Return"
+            subtitle="Minimum target return"
             icon={Target}
             trend="neutral"
-            tooltip="The minimum return threshold that must be exceeded before performance fees apply."
+            tooltip="The minimum return threshold before performance fees apply."
             delay={0.9}
           />
           <MetricCard
-            title="Avg Win"
-            value={`$${tradeStatistics.averageProfitTrade.toFixed(2)}`}
+            title="Average Win"
+            value={`$${averageProfitTrade.toFixed(2)}`}
             subtitle="Per profitable trade"
             icon={TrendingUp}
             trend="up"
-            tooltip="Average profit on winning trades. Higher values indicate strong profit-taking."
+            tooltip="Average net profit on winning trades."
             delay={1.0}
           />
           <MetricCard
             title="Total Trades"
-            value={tradeStatistics.totalTrades}
-            subtitle="Q4/2025 Activity"
+            value={tradeSummary.totalTrades}
+            subtitle="Q4 2025 activity"
             icon={BarChart3}
             trend="neutral"
             tooltip="Total number of closed positions for the period."
@@ -248,19 +383,19 @@ const Index = () => {
           />
         </div>
 
-        {/* Insights & Tips */}
         <div className="mb-8">
           <InsightsTips />
         </div>
 
-        {/* Trade History Table */}
         <TradeHistory />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-16 py-8">
+      <footer className="mt-16 border-t border-border py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>© 2025 Blue Marvel Capital. All rights reserved.</p>
+          <p className="mt-2">
+            Performance simulation report generated from the supplied trade set.
+          </p>
         </div>
       </footer>
     </div>
