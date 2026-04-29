@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   AlertCircle,
@@ -19,11 +22,7 @@ import { TradeHistory } from "@/components/TradingDashboard/TradeHistory";
 import { RiskMetricsGauge } from "@/components/TradingDashboard/RiskMetricsGauge";
 import { BenchmarkComparison } from "@/components/TradingDashboard/BenchmarkComparison";
 import { InsightsTips } from "@/components/TradingDashboard/InsightsTips";
-import {
-  performanceMetrics,
-  trades,
-  type Trade,
-} from "@/data/tradingData";
+import { performanceMetrics, trades } from "@/data/tradingData";
 import { Card, CardContent } from "@/components/ui/card";
 
 const initialBalance = 10000;
@@ -88,18 +87,6 @@ const profitTradesPercent = tradeSummary.totalTrades
   ? (tradeSummary.profitTrades / tradeSummary.totalTrades) * 100
   : 0;
 
-const lossTradesPercent = tradeSummary.totalTrades
-  ? (tradeSummary.lossTrades / tradeSummary.totalTrades) * 100
-  : 0;
-
-const shortWinRate = tradeSummary.shortPositions
-  ? (tradeSummary.shortWins / tradeSummary.shortPositions) * 100
-  : 0;
-
-const longWinRate = tradeSummary.longPositions
-  ? (tradeSummary.longWins / tradeSummary.longPositions) * 100
-  : 0;
-
 const averageProfitTrade = tradeSummary.winningNetTrades.length
   ? tradeSummary.winningNetTrades.reduce((sum, value) => sum + value, 0) /
     tradeSummary.winningNetTrades.length
@@ -111,6 +98,8 @@ const averageLossTrade = tradeSummary.losingNetTrades.length
   : 0;
 
 const Index = () => {
+  const router = useRouter();
+
   const fmtMoney = (value: number) =>
     value.toLocaleString("en-GB", {
       minimumFractionDigits: 2,
@@ -124,15 +113,34 @@ const Index = () => {
           <div className="text-center md:text-left">
             <h1 className="text-2xl font-bold">Blue Marvel Capital</h1>
             <p className="text-sm text-muted-foreground">
-              Performance Simulation Report
+              Performance simulation report
             </p>
           </div>
 
-          <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2">
-            <Lock className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-primary">
-              Proprietary Data
-            </span>
+          <div className="flex flex-col items-center gap-3 sm:flex-row">
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-background p-1 shadow-sm">
+              <button
+                type="button"
+                className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground shadow-sm"
+                aria-current="page"
+              >
+                2025
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/")}
+                className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                2026
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2">
+              <Lock className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-primary">
+                Proprietary data
+              </span>
+            </div>
           </div>
         </div>
       </header>
@@ -142,14 +150,14 @@ const Index = () => {
           <AlertCircle className="h-4 w-4 text-warning" />
           <AlertDescription>
             <strong>Confidential:</strong> This trading data is proprietary
-            information of Blue Marvel Capital. Unauthorized distribution or
+            information of Blue Marvel Capital. Unauthorised distribution or
             reproduction is prohibited.
           </AlertDescription>
         </Alert>
 
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-extrabold text-primary sm:text-4xl md:text-5xl">
-            Performance Report
+            Performance report
           </h2>
           <p className="mt-2 text-muted-foreground">
             Q4 2025 trading performance summary
@@ -158,21 +166,21 @@ const Index = () => {
 
         <div className="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <MetricCard
-            title="Initial Capital"
+            title="Initial capital"
             value={`$${fmtMoney(initialBalance)}`}
             subtitle="Starting balance"
             icon={DollarSign}
             trend="neutral"
           />
           <MetricCard
-            title="Current Balance"
+            title="Current balance"
             value={`$${fmtMoney(balance)}`}
             subtitle={`+$${fmtMoney(totalNetProfit)} net profit`}
             icon={DollarSign}
             trend="up"
           />
           <MetricCard
-            title="Total Return"
+            title="Total return"
             value={`${roi.toFixed(2)}%`}
             subtitle="Portfolio performance"
             icon={TrendingUp}
@@ -184,7 +192,12 @@ const Index = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
+            transition={{
+              duration: 0.6,
+              delay: 0.2,
+              type: "spring",
+              stiffness: 100,
+            }}
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             className="w-full max-w-4xl"
           >
@@ -193,7 +206,7 @@ const Index = () => {
                 <div className="flex items-center justify-center gap-3">
                   <Target className="h-5 w-5 text-primary" />
                   <span className="text-sm font-bold uppercase tracking-widest text-primary">
-                    Performance Overview
+                    Performance overview
                   </span>
                 </div>
               </div>
@@ -202,7 +215,7 @@ const Index = () => {
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
                   <div className="rounded-2xl border border-border bg-background/50 p-4 text-center">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                      Gross Profit
+                      Gross profit
                     </p>
                     <p className="mt-2 text-2xl font-bold text-foreground">
                       ${fmtMoney(grossProfit)}
@@ -211,7 +224,7 @@ const Index = () => {
 
                   <div className="rounded-2xl border border-border bg-background/50 p-4 text-center">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                      Gross Loss
+                      Gross loss
                     </p>
                     <p className="mt-2 text-2xl font-bold text-foreground">
                       ${fmtMoney(grossLoss)}
@@ -229,7 +242,7 @@ const Index = () => {
 
                   <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-4 text-center">
                     <p className="text-xs font-semibold uppercase tracking-wide text-green-500">
-                      Net Profit
+                      Net profit
                     </p>
                     <p className="mt-2 text-2xl font-extrabold text-green-600">
                       ${fmtMoney(totalNetProfit)}
@@ -238,8 +251,8 @@ const Index = () => {
                 </div>
 
                 <div className="mt-5 rounded-xl border border-border bg-background/60 px-4 py-3 text-center text-sm text-muted-foreground">
-                  Net profit is calculated from profit plus commission across
-                  all closed trades.
+                  Net profit is calculated from profit plus commission across all
+                  closed trades.
                 </div>
               </CardContent>
             </Card>
@@ -248,7 +261,7 @@ const Index = () => {
 
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
-            title="Total Net Profit"
+            title="Total net profit"
             value={`$${fmtMoney(totalNetProfit)}`}
             subtitle="Calculated from trades"
             icon={DollarSign}
@@ -257,7 +270,7 @@ const Index = () => {
             delay={0.3}
           />
           <MetricCard
-            title="Profit Factor"
+            title="Profit factor"
             value={profitFactor.toFixed(2)}
             subtitle="Gross profit ÷ gross loss"
             icon={Activity}
@@ -266,7 +279,7 @@ const Index = () => {
             delay={0.4}
           />
           <MetricCard
-            title="Sharpe Ratio"
+            title="Sharpe ratio"
             value={performanceMetrics.sharpeRatioAnnualized.toFixed(2)}
             subtitle="Annualised (monthly: 0.58)"
             icon={Gauge}
@@ -275,7 +288,7 @@ const Index = () => {
             delay={0.5}
           />
           <MetricCard
-            title="Win Rate"
+            title="Win rate"
             value={`${profitTradesPercent.toFixed(2)}%`}
             subtitle={`${tradeSummary.profitTrades} of ${tradeSummary.totalTrades} trades`}
             icon={Target}
@@ -307,7 +320,7 @@ const Index = () => {
 
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
-            title="Expected Payoff"
+            title="Expected payoff"
             value={`$${fmtMoney(expectedPayoff)}`}
             subtitle="Net profit per trade"
             icon={LineChart}
@@ -316,7 +329,7 @@ const Index = () => {
             delay={0.4}
           />
           <MetricCard
-            title="Standard Deviation"
+            title="Standard deviation"
             value={`${performanceMetrics.standardDeviation.toFixed(2)}%`}
             subtitle="Portfolio volatility"
             icon={BarChart3}
@@ -325,7 +338,7 @@ const Index = () => {
             delay={0.5}
           />
           <MetricCard
-            title="Average Loss"
+            title="Average loss"
             value={`$${Math.abs(averageLossTrade).toFixed(2)}`}
             subtitle="Per losing trade"
             icon={Activity}
@@ -334,7 +347,7 @@ const Index = () => {
             delay={0.6}
           />
           <MetricCard
-            title="Risk-Free Rate"
+            title="Risk-free rate"
             value={`${performanceMetrics.riskFreeRate}%`}
             subtitle="US 3-month T-bill"
             icon={BarChart3}
@@ -346,7 +359,7 @@ const Index = () => {
 
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
-            title="High-Water Mark"
+            title="High-water mark"
             value={`$${performanceMetrics.highWaterMark.toLocaleString()}`}
             subtitle="Peak portfolio value"
             icon={TrendingUp}
@@ -355,7 +368,7 @@ const Index = () => {
             delay={0.8}
           />
           <MetricCard
-            title="Hurdle Rate"
+            title="Hurdle rate"
             value={`${performanceMetrics.hurdleRate}%`}
             subtitle="Minimum target return"
             icon={Target}
@@ -364,7 +377,7 @@ const Index = () => {
             delay={0.9}
           />
           <MetricCard
-            title="Average Win"
+            title="Average win"
             value={`$${averageProfitTrade.toFixed(2)}`}
             subtitle="Per profitable trade"
             icon={TrendingUp}
@@ -373,7 +386,7 @@ const Index = () => {
             delay={1.0}
           />
           <MetricCard
-            title="Total Trades"
+            title="Total trades"
             value={tradeSummary.totalTrades}
             subtitle="Q4 2025 activity"
             icon={BarChart3}
