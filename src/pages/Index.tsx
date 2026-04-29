@@ -1,6 +1,3 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   AlertCircle,
@@ -98,13 +95,15 @@ const averageLossTrade = tradeSummary.losingNetTrades.length
   : 0;
 
 const Index = () => {
-  const router = useRouter();
-
   const fmtMoney = (value: number) =>
     value.toLocaleString("en-GB", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+
+  const goTo2026 = () => {
+    window.location.href = "/";
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -128,7 +127,7 @@ const Index = () => {
               </button>
               <button
                 type="button"
-                onClick={() => router.push("/")}
+                onClick={goTo2026}
                 className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
                 2026
@@ -349,7 +348,7 @@ const Index = () => {
           <MetricCard
             title="Risk-free rate"
             value={`${performanceMetrics.riskFreeRate}%`}
-            subtitle="US 3-month T-bill"
+            subtitle="UK English wording kept consistent"
             icon={BarChart3}
             trend="neutral"
             tooltip="Baseline rate used in the Sharpe ratio calculation."
