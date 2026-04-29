@@ -102,7 +102,7 @@ const Index = () => {
     });
 
   const goTo2026 = () => {
-    window.location.href = "/";
+    window.location.href = "https://bmc-overall-trading-data.vercel.app";
   };
 
   return (
